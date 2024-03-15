@@ -1,0 +1,7 @@
+{
+    "bsc":{
+        "chainId":"97",
+        "httpProvider":["https://endpoints.omniatech.io/v1/bsc/testnet/public"],
+        "wsProvider":[""]
+    }
+}
