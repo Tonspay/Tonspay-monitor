@@ -29,12 +29,25 @@ const invoiceStruct = {
     comment: "", //The invoice comment for user 
     paymentResult: {}
 }
-const paymentResultStruct = {
-    hash: "", //Token payment hash
+const paymentResultStruct =
+{
+    "paymentDetails": {
+        "from":"",//The address of payer
+        "amount":0,//How much this transaction paid on chain .
+        "hash" : "",//The transaction hash of this payment . 
+    }, //Token payment hash
+    "routerFeeDetails":{
+        "from":"",//The address of payer . 
+        "amount":"",//How much being charged by payment router .
+        "hash" : "" , //The sub transaction of router fee .
+        "isPrepaid":true, //If this transaction being prepaird by merchant by Token . 
+    },
+    "timestamp":0//Callback time
 }
 
 const callbackStruct = {
     uid : 0, //Invoice owner
+    hash : "",//the hash of payment invoice
     invoice:"",//Invoice Id
     path : "",//Call back url
     createTime:0,//Request time
@@ -128,5 +141,6 @@ module.exports = {
     getInvoiceById,
     unique,
     getCallbackByOrder,
-    newCallback
+    newCallback,
+    getCallbackByOwner
 }

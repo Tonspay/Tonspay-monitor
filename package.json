@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@solana/web3.js": "^1.91.1",
+    "b58": "^4.0.3",
     "dotenv": "^16.4.5",
     "mongodb": "^6.5.0",
     "request": "^2.88.2"

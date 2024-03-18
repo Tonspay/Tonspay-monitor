@@ -28,13 +28,31 @@ async function handle(updatedAccountInfo)
     let transactionDetails = await solanaConnection.getParsedTransaction(updatedAccountInfo.signature, {maxSupportedTransactionVersion:0});
     if(transactionDetails && transactionDetails?.transaction)
     {
-        const memo = getMemo(transactionDetails.transaction)
-
+        const memo = get_memo(transactionDetails.transaction)
         console.log(memo);
+        //Verfiy the tranasction direction & no tirck
+        const sender = transactionDetails.transaction.message.accountKeys[0]?.pubkey;
+        const balSender = transactionDetails.meta.postBalances[0]-transactionDetails.meta.preBalance[0]
+        const reciver = transactionDetails.transaction.message.accountKeys[1]?.pubkey
+        const balReciver = transactionDetails.meta.postBalances[1]-transactionDetails.meta.preBalance[1]
+        const router = transactionDetails.transaction.message.accountKeys[2]?.pubkey
+        const balRouter = transactionDetails.meta.postBalances[2]-transactionDetails.meta.preBalance[2]
+        await utils.invoice.invoice_achive(
+            memo,
+            updatedAccountInfo.signature,
+            sender,
+            reciver,
+            balReciver,
+            balRouter,
+            1,
+            7,
+            0
+            )
+        
     }
 }
 
-function getMemo(transaction)
+function get_memo(transaction)
 {
     var ret = false;
     if(transaction?.message?.instructions)
