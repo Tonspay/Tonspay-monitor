@@ -3,5 +3,5 @@ const db = require("./db")
 
 module.exports = {
     api,
-    db
+    db,
 }
