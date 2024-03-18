@@ -49,7 +49,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
             "createTime":Date.now()//The time of this callback .
         }
         const sign = callback_sign(callbackStruct)
-        api.callbackRequest(invoice.callback,JSON.stringify({sign:sign}));
+        api.callbackRequest(invoice.callback,{sign:sign});
         await db.newCallback(
             invoice.uid,
             invoice.id,
@@ -63,10 +63,12 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
 
 function callback_sign(data)
 {
-    return nacl.sign(
-        Buffer.from(JSON.stringify(data)).toString("base64")
-        ,sign_kp.secretKey
-        )
+    return b58.encode(
+        nacl.sign(
+            Buffer.from(JSON.stringify(data))
+            ,sign_kp.secretKey
+            )
+    )
 }
 
 function sleep (ms) {

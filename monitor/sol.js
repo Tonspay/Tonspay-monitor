@@ -4,13 +4,14 @@ const web3 = require("@solana/web3.js")
 const utils = require("../utils/index")
 var solanaConnection ;
 
-async function init(SOL_HTTP,SOL_WS,LISTEN_SOL)
+var LISTEN_SOL ;
+async function init(SOL_HTTP,SOL_WS,LISTEN)
 {
     solanaConnection = new web3.Connection(SOL_HTTP,{wsEndpoint:SOL_WS})
-    await listen(LISTEN_SOL);
+    LISTEN_SOL = LISTEN
 }
 
-async function listen(LISTEN_SOL)
+async function listen()
 {
     const ACCOUNT_TO_WATCH = new web3.PublicKey(process.env.LISTEN_SOL); // Replace with your own Wallet Address
     const subscriptionId = await solanaConnection.onLogs(
@@ -24,7 +25,7 @@ async function listen(LISTEN_SOL)
 
 async function handle(updatedAccountInfo)
 {
-    await solanaConnection.confirmTransaction(updatedAccountInfo.signature);
+    // await solanaConnection.confirmTransaction(updatedAccountInfo.signature);
     let transactionDetails = await solanaConnection.getParsedTransaction(updatedAccountInfo.signature, {maxSupportedTransactionVersion:0});
     if(transactionDetails && transactionDetails?.transaction)
     {
@@ -32,11 +33,11 @@ async function handle(updatedAccountInfo)
         console.log(memo);
         //Verfiy the tranasction direction & no tirck
         const sender = transactionDetails.transaction.message.accountKeys[0]?.pubkey;
-        const balSender = transactionDetails.meta.postBalances[0]-transactionDetails.meta.preBalance[0]
+        const balSender = transactionDetails.meta.postBalances[0]-transactionDetails.meta.preBalances[0]
         const reciver = transactionDetails.transaction.message.accountKeys[1]?.pubkey
-        const balReciver = transactionDetails.meta.postBalances[1]-transactionDetails.meta.preBalance[1]
+        const balReciver = transactionDetails.meta.postBalances[1]-transactionDetails.meta.preBalances[1]
         const router = transactionDetails.transaction.message.accountKeys[2]?.pubkey
-        const balRouter = transactionDetails.meta.postBalances[2]-transactionDetails.meta.preBalance[2]
+        const balRouter = transactionDetails.meta.postBalances[2]-transactionDetails.meta.preBalances[2]
         await utils.invoice.invoice_achive(
             memo,
             updatedAccountInfo.signature,
@@ -71,5 +72,6 @@ function get_memo(transaction)
 
 module.exports = {
     init,
-    listen
+    listen,
+    handle
 }

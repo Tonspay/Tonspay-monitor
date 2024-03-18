@@ -1,6 +1,6 @@
 const web3 = require("@solana/web3.js")
 
-
+const sol = require("./monitor/sol")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
 
 
@@ -77,11 +77,20 @@ function getMemo(transaction)
     }
     return ret
 }
+
+async function callbacktest()
+{
+    await sol.init(process.env.SOL_HTTP,process.env.SOL_WS,process.env.LISTEN_SOL);
+    const preTx = '';
+    await sol.handle({signature:preTx})
+
+}
 async function test()
 {
     // await getTransactions('')
     // await fetchMemo()
-    await getRawTx()
+    // await getRawTx()
+    await callbacktest()
 }
 
 test()
