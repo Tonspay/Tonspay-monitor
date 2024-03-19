@@ -42,12 +42,12 @@ async function handle(updatedAccountInfo)
         await utils.invoice.invoice_achive(
             memo,
             updatedAccountInfo.signature.toLowerCase(),
-            sender,
-            reciver,
+            sender.toBase58().toLowerCase(),
+            reciver.toBase58().toLowerCase(),
             balReciver,
             balRouter,
             1,
-            7,
+            0,
             0
             )
     }
