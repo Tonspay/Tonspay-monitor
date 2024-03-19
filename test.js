@@ -2,7 +2,7 @@ const web3 = require("@solana/web3.js")
 
 const sol = require("./monitor/sol")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
-
+const utils = require("./utils/index");
 
 async function listenAccount()
 {
@@ -85,12 +85,22 @@ async function callbacktest()
     await sol.handle({signature:preTx})
 
 }
+
+async function evmListenTest()
+{
+    // await utils.web3.init(false,'tbsc')
+    // await utils.web3.listen();
+    await utils.web3.init(true,'tbsc')
+    const ret = await utils.web3.payAnalyzeByHash('0xaff36f3c1ffcbd87bec9eb05d7942df57f7fe9280497de51b1bdd6499659a6ad')
+    console.log(ret)
+}
 async function test()
 {
     // await getTransactions('')
     // await fetchMemo()
     // await getRawTx()
-    await callbacktest()
+    // await callbacktest()
+    await evmListenTest()
 }
 
 test()

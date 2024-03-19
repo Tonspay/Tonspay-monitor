@@ -9,6 +9,7 @@ async function init(SOL_HTTP,SOL_WS,LISTEN)
 {
     solanaConnection = new web3.Connection(SOL_HTTP,{wsEndpoint:SOL_WS})
     LISTEN_SOL = LISTEN
+    return 0;
 }
 
 async function listen()
@@ -40,7 +41,7 @@ async function handle(updatedAccountInfo)
         const balRouter = transactionDetails.meta.postBalances[2]-transactionDetails.meta.preBalances[2]
         await utils.invoice.invoice_achive(
             memo,
-            updatedAccountInfo.signature,
+            updatedAccountInfo.signature.toLowerCase(),
             sender,
             reciver,
             balReciver,
@@ -49,7 +50,6 @@ async function handle(updatedAccountInfo)
             7,
             0
             )
-        
     }
 }
 

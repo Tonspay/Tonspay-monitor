@@ -21,7 +21,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         && invoice.amount == amountSend
         && invoice.type == transactionType 
         && invoice.token == token
-        && invoice.address == to
+        && invoice.address.toLowerCase() == to
         && invoice.callback)
     {
         const paymentResult = {
@@ -41,7 +41,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         await db.payInvoice(invoiceId,paymentResult);
         const callbackStruct = {
             "uid":invoice?.uid, //Your merchant user id in telegram bot . Please verfiy if it is your callback.
-            "invoiceId":invoice?.id,//Which invoice this callback for . 
+            "invoiceId":invoice?.id.toLowerCase(),//Which invoice this callback for . 
             "paymentMethod":invoice?.methodId,//The payment method of the invoice . 
             "confirmedBlock":block, //How many block since the callback confirm . 
             "paymentDetails":paymentResult.paymentDetails,
@@ -57,7 +57,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         )
         await sleep(callback_sleep);
     }else{
-        console.error("Payment not match any ..." , invoice,invoiceId,hash,from,amountSend,amountFee,isPrepaid,transactionType,token)
+        console.error("Payment not match any ..." , invoice,invoiceId,hash,from,to,amountSend,amountFee,transactionType,token,block)
     }
 }
 

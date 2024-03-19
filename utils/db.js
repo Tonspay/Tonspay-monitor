@@ -11,22 +11,23 @@ const sCallback = "callback"
 const merchantPaymentMethodStruct = {
     uid: 0, //merchantId
     methodId: 0, //PaymentMethodId uid+timestamp+type to string(36)
-    type: 0, // Type of payment : 0:TON | 1:LN | 2:TRON | 3:ETH | 4:POLYGON | 5:ARB | 6:BSC | 7:SOLANA
+    type: 0, // Type of payment : 0:TON | 1:SOL | 2:ARB 
     address: "", // Address to recive payment 
+    callback : "",
     label: "" //Name for merchant remember
 }
-
 const invoiceStruct = {
     id: 0, //Invoice id : uid+timestamp+invoiceCont to string(36)
     uid: 0, //merchantId
     amount: 0, //Amount in int . decimails : 8 
     amountUsd: 0,
-    type: 0, //payment type
+    type: 0, //payment type :: 0:Mainnet token , 1:USDT , 2:USDC , 3:DAI (Different chain have different token )
     token: 0, //Payment Token type 
     createTime: 0,
     methodId: -1, //PaymentMethodId default -1 : allows all kinds of payment . 
     status: 0, //Payment status : 0 : Pending | 1 : Pay success | 2 : Pay cancel
     comment: "", //The invoice comment for user 
+    callback : "",
     paymentResult: {}
 }
 const paymentResultStruct =
