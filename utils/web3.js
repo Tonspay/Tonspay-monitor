@@ -28,6 +28,7 @@ async function init(type,_chain)
 
 async function listen()
 {
+  console.log("🔥 EVM process listen")
   var options = {
     address: invoice_chain_information.routerAddress,
       topics: [

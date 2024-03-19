@@ -21,7 +21,7 @@ async function listen()
         setTimeout(() => {try{handle(updatedAccountInfo)}catch(e){console.error(e)}}, 60000),
         "confirmed"
     );
-    console.log('Starting web socket, subscription ID: ', subscriptionId);
+    console.log('🚀 SOLANA process monit start');
 }
 
 async function handle(updatedAccountInfo)
