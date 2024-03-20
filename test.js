@@ -94,13 +94,39 @@ async function evmListenTest()
     const ret = await utils.web3.payAnalyzeByHash('0xaff36f3c1ffcbd87bec9eb05d7942df57f7fe9280497de51b1bdd6499659a6ad')
     console.log(ret)
 }
+
+function sleep (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+}
+
+async function awaitSignatureStatus(sign,i)
+{
+    const ret = await solanaConnection.getSignatureStatus(sign, {searchTransactionHistory:true});
+    console.log(ret)
+    if(ret?.value?.confirmationStatus == 'finalized')
+    {
+        return true;
+    }
+    if(i>=120)
+    {
+        return false;
+    }
+    await sleep(1000);
+    return await awaitSignatureStatus(sign,i++)
+}
+
 async function test()
 {
     // await getTransactions('')
     // await fetchMemo()
     // await getRawTx()
     // await callbacktest()
-    await evmListenTest()
+    // await evmListenTest()
+
+    await awaitSignatureStatus('')
+    console.log("Test over")
 }
 
 test()

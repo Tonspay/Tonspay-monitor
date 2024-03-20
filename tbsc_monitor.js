@@ -6,7 +6,7 @@ require('dotenv').config()
 async function init()
 {
     await tbsc.init()
-    tbsc.listen();
+    await tbsc.listen();
 }
 
 init()

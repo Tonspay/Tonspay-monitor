@@ -5,6 +5,13 @@ const utils = require("../utils/index")
 var solanaConnection ;
 
 var LISTEN_SOL ;
+
+function sleep (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+}
+
 async function init(SOL_HTTP,SOL_WS,LISTEN)
 {
     solanaConnection = new web3.Connection(SOL_HTTP,{wsEndpoint:SOL_WS})
@@ -15,19 +22,36 @@ async function init(SOL_HTTP,SOL_WS,LISTEN)
 async function listen()
 {
     const ACCOUNT_TO_WATCH = new web3.PublicKey(process.env.LISTEN_SOL); // Replace with your own Wallet Address
-    const subscriptionId = await solanaConnection.onLogs(
+    await solanaConnection.onLogs(
         ACCOUNT_TO_WATCH,
         async (updatedAccountInfo) =>
-        {try{handle(updatedAccountInfo)}catch(e){console.error(e)}},
+        {try{console.log(updatedAccountInfo);await handle(updatedAccountInfo)}catch(e){console.error(e)}},
         // setTimeout(() => {try{handle(updatedAccountInfo)}catch(e){console.error(e)}}, 60000),
         "confirmed"
     );
     console.log('🚀 SOLANA process monit start');
 }
 
+
+async function awaitSignatureStatus(sign,i)
+{
+    const ret = await solanaConnection.getSignatureStatus(sign, {searchTransactionHistory:true});
+    console.log(ret)
+    if(ret?.value?.confirmationStatus == 'finalized')
+    {
+        return true;
+    }
+    if(i>=120)
+    {
+        return false;
+    }
+    await sleep(1000);
+    return await awaitSignatureStatus(sign,i++)
+}
+
 async function handle(updatedAccountInfo)
 {
-    // await solanaConnection.confirmTransaction(updatedAccountInfo.signature);
+    await awaitSignatureStatus(updatedAccountInfo.signature,0)
     let transactionDetails = await solanaConnection.getParsedTransaction(updatedAccountInfo.signature, {maxSupportedTransactionVersion:0});
     if(transactionDetails && transactionDetails?.transaction)
     {
