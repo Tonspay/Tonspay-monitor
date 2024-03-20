@@ -125,8 +125,8 @@ async function test()
     // await callbacktest()
     // await evmListenTest()
 
-    await awaitSignatureStatus('')
-    console.log("Test over")
+    // await awaitSignatureStatus('')
+    // console.log("Test over")
 }
 
 test()

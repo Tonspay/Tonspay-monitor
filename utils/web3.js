@@ -35,14 +35,15 @@ async function listen()
         invoice_chain_information.topics.pay,
       ]
     };
-  web3.eth.subscribe('logs', options, function(error, result){
-      if (!error) console.log('got result');
+  await web3.eth.subscribe('logs', options, function(error, result){
+      if (!error) console.log('got result',result);
       else console.log(error);
   }).on("data", async function(log){
-    try{handle(log)}catch(e){console.error(e)}
+    console.log("on data")
+    try{await handle(log)}catch(e){console.error(e)}
     // setTimeout(() => {try{handle(log)}catch(e){console.error(e)}}, 60000)
   }).on("changed", function(log){
-      console.log('changed');
+      console.log('changed',log);
   });
 }
 

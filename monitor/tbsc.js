@@ -1,4 +1,12 @@
 const utils = require("../utils/index");
+
+function sleep (ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+}
+
+
 async function init()
 {
     await utils.web3.init(false,"tbsc")

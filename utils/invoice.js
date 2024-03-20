@@ -50,7 +50,13 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         }
         const sign = callback_sign(callbackStruct)
         console.log("🐞 Call back sign :: ",sign)
-        api.callbackRequest(invoice.callback,{sign:sign});
+        try{
+            api.callbackRequest(invoice.callback,{sign:sign});
+        }catch(e)
+        {
+            console.error(e)
+        }
+        
         await db.newCallback(
             invoice.uid,
             invoice.id,
