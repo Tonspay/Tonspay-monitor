@@ -18,7 +18,8 @@ async function listen()
     const subscriptionId = await solanaConnection.onLogs(
         ACCOUNT_TO_WATCH,
         async (updatedAccountInfo) =>
-        setTimeout(() => {try{handle(updatedAccountInfo)}catch(e){console.error(e)}}, 60000),
+        {try{handle(updatedAccountInfo)}catch(e){console.error(e)}},
+        // setTimeout(() => {try{handle(updatedAccountInfo)}catch(e){console.error(e)}}, 60000),
         "confirmed"
     );
     console.log('🚀 SOLANA process monit start');

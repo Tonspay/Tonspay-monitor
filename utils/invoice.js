@@ -49,6 +49,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
             "createTime":Date.now()//The time of this callback .
         }
         const sign = callback_sign(callbackStruct)
+        console.log("🐞 Call back sign :: ",sign)
         api.callbackRequest(invoice.callback,{sign:sign});
         await db.newCallback(
             invoice.uid,

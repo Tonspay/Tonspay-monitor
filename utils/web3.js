@@ -39,7 +39,8 @@ async function listen()
       if (!error) console.log('got result');
       else console.log(error);
   }).on("data", async function(log){
-    setTimeout(() => {try{handle(log)}catch(e){console.error(e)}}, 60000)
+    try{handle(log)}catch(e){console.error(e)}
+    // setTimeout(() => {try{handle(log)}catch(e){console.error(e)}}, 60000)
   }).on("changed", function(log){
       console.log('changed');
   });
