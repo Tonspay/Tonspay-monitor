@@ -1,11 +1,23 @@
 {
     "tbsc":{
         "chainId":"97",
-        "httpProvider":["https://endpoints.omniatech.io/v1/bsc/testnet/public"],
+        "httpProvider":["https://bsc-testnet-rpc.publicnode.com"],
         "wsProvider":["wss://bsc-testnet-rpc.publicnode.com"],
         "invoice":{
             "invoice_type":2,
             "routerAddress":"0x4d978743b36b7f8a72b8c2cd77dd24b33d9e2d9b",
+            "topics":{
+                "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
+            }
+        }
+    },
+    "arb":{
+        "chainId":"42161",
+        "httpProvider":["https://arb-mainnet.g.alchemy.com/v2/az99XU3yyqQmGX-0IXgop92EMIb-dX2N"],
+        "wsProvider":["wss://arb-mainnet.g.alchemy.com/v2/az99XU3yyqQmGX-0IXgop92EMIb-dX2N"],
+        "invoice":{
+            "invoice_type":2,
+            "routerAddress":"0x318b6ab1cbC3258a083c77a6FBC9a1215FfdDeA4",
             "topics":{
                 "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
             }

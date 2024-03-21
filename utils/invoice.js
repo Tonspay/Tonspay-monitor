@@ -18,7 +18,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
     //Verfiy if the invoice exsit , and check the invoice payment data .
     const invoice = await db.getInvoiceById(invoiceId);
     if(invoice
-        && invoice.amount == amountSend
+        && invoice.amount >= amountSend
         && invoice.type == transactionType 
         && invoice.token == token
         && invoice.address.toLowerCase() == to

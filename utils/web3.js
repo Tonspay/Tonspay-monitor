@@ -39,7 +39,7 @@ async function listen()
       if (!error) console.log('got result',result);
       else console.log(error);
   }).on("data", async function(log){
-    console.log("on data")
+    // console.log("on data")
     try{await handle(log)}catch(e){console.error(e)}
     // setTimeout(() => {try{handle(log)}catch(e){console.error(e)}}, 60000)
   }).on("changed", function(log){
@@ -59,7 +59,7 @@ async function handle(log)
       log.transactionHash.toLowerCase(),
       logs.from.toLowerCase(),
       logs.to.toLowerCase(),
-      logs.amount,
+      logs.amountFinal,
       logs.amountRouter,
       invoice_chain_information.invoice_type,
       0,
@@ -70,7 +70,7 @@ async function handle(log)
       log.transactionHash.toLowerCase(),
       logs.from.toLowerCase(),
       logs.to.toLowerCase(),
-      logs.amount,
+      logs.amountFinal,
       logs.amountRouter,
       invoice_chain_information.invoice_type,
       0,
@@ -96,7 +96,7 @@ async function payAnalyzeByHash(hash)
                 for(var i = 0 ; i < ret.logs.length ; i ++)
                 {
                   //Pay event
-                  if((ret.logs[i].topics[0]) && (ret.logs[i].topics[0]).toLowerCase() == '0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32'.toLowerCase())
+                  if((ret.logs[i].topics[0]) && (ret.logs[i].topics[0]).toLowerCase() ==invoice_chain_information.topics.pay.toLowerCase())
                   {
                     var decode = await web3.eth.abi.decodeLog(_abi[1].inputs, ret.logs[i].data,  ret.logs[i].topics);
                     return decode;
@@ -337,19 +337,6 @@ function getRouterAbi()
         "type": "function"
       },
       {
-        "inputs": [],
-        "name": "routerRateDecimail",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
         "inputs": [
           {
             "internalType": "address",
@@ -365,11 +352,6 @@ function getRouterAbi()
             "internalType": "string",
             "name": "id",
             "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "routerRate",
-            "type": "uint256"
           }
         ],
         "name": "transfer",
@@ -390,6 +372,11 @@ function getRouterAbi()
             "type": "uint256"
           },
           {
+            "internalType": "uint256",
+            "name": "routerAmount",
+            "type": "uint256"
+          },
+          {
             "internalType": "address",
             "name": "token",
             "type": "address"
@@ -398,11 +385,6 @@ function getRouterAbi()
             "internalType": "string",
             "name": "id",
             "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "routerRate",
-            "type": "uint256"
           }
         ],
         "name": "transferToken",
