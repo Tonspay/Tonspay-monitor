@@ -1,11 +1,16 @@
 {
   "dependencies": {
+    "@orbs-network/ton-access": "^2.3.3",
     "@solana/web3.js": "^1.91.1",
+    "@ton/ton": "^13.11.1",
     "b58": "^4.0.3",
     "bignumber.js": "^9.1.2",
     "dotenv": "^16.4.5",
+    "graphql-request": "^6.1.0",
     "mongodb": "^6.5.0",
     "request": "^2.88.2",
+    "ton": "^13.9.0",
+    "tonweb": "^0.0.64",
     "web3": "^1.7.4"
   }
 }
