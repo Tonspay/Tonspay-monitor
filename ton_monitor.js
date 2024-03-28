@@ -1,11 +1,8 @@
-const sol = require("./monitor/sol")
-
-require('dotenv').config()
+const ton = require("./monitor/ton")
 
 async function init()
 {
-    await sol.init(process.env.SOL_HTTP,process.env.SOL_WS,process.env.LISTEN_SOL)
-    await sol.listen();
+    await ton.listen();
     
 }
 

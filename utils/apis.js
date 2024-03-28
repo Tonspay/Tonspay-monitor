@@ -8,6 +8,13 @@ const tonRouter = {
   transactions : tonviewUrl+'v2/blockchain/transactions/'
 }
 
+const toncenterUrl = `https://toncenter.com/api/`;
+
+const toncenterRouter = {
+  getTransactionByHash : toncenterUrl + `v3/transactions`,
+  getTransactionByMessage : toncenterUrl + `v3/transactionsByMessage`
+}
+
 async function anyRequest(url)
 {
     var options = {
@@ -46,8 +53,36 @@ async function getTonTransactionByHash(hash)
   };
   return req.doRequest(options);
 }
+
+async function getToncenterTransactionByHash(hash)
+{
+  var options = {
+    'method': 'GET',
+    'url': toncenterRouter.getTransactionByHash + "?hash=" +hash,
+    'headers': {
+      'X-API-Key' : process.env.TONCENTER_API,
+      'Content-Type': 'application/json'
+    },
+  };
+  return req.doRequest(options);
+}
+
+async function getToncenterTransactionByMessage(dir,hash)
+{
+  var options = {
+    'method': 'GET',
+    'url': toncenterRouter.getTransactionByMessage + `?direction=${dir}&msg_hash=${encodeURI(hash)}`,
+    'headers': {
+      'X-API-Key' : process.env.TONCENTER_API,
+      'Content-Type': 'application/json'
+    },
+  };
+  return req.doRequest(options);
+}
 module.exports = {
     anyRequest,
     callbackRequest,
-    getTonTransactionByHash
+    getTonTransactionByHash,
+    getToncenterTransactionByHash,
+    getToncenterTransactionByMessage
 }

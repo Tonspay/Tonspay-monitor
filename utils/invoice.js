@@ -21,7 +21,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         && invoice.amount >= amountSend
         && invoice.type == transactionType 
         && invoice.token == token
-        && invoice.address.toLowerCase() == to
+        && invoice.address.toLowerCase() == to.toLowerCase()
         && invoice.callback)
     {
         const paymentResult = {
@@ -64,7 +64,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         )
         await sleep(callback_sleep);
     }else{
-        console.error("Payment not match any ..." , invoice,invoiceId,hash,from,to,amountSend,amountFee,transactionType,token,block)
+        console.error("🐞 Payment not match any ..." , invoice,invoiceId,hash,from,to,amountSend,amountFee,transactionType,token,block)
     }
 }
 
