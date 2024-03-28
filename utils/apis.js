@@ -1,5 +1,13 @@
 const req = require("./request");
 
+require('dotenv').config()
+
+const tonviewUrl = 'https://tonapi.io/'
+
+const tonRouter = {
+  transactions : tonviewUrl+'v2/blockchain/transactions/'
+}
+
 async function anyRequest(url)
 {
     var options = {
@@ -25,7 +33,21 @@ async function callbackRequest(callback,body)
       };
       return req.doRequest(options);
 }
+
+async function getTonTransactionByHash(hash)
+{
+  var options = {
+    'method': 'GET',
+    'url': tonRouter.transactions + hash,
+    'headers': {
+      'Authorization' : "Bearer "+process.env.TONVIWER_API,
+      'Content-Type': 'application/json'
+    },
+  };
+  return req.doRequest(options);
+}
 module.exports = {
     anyRequest,
-    callbackRequest
+    callbackRequest,
+    getTonTransactionByHash
 }
