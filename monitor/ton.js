@@ -141,8 +141,9 @@ async function getTonMotherTransactionByChild(hash)
 async function getTonMotherTransactionByHash(hash)
 {
     try{
+        await sleep(10000)
         const father =  await utils.api.getToncenterTransactionByHash(hash)
-        if(father && father?.transactions && father.transactions.length>0 && father.transactions[0]?.in_msg && father.transactions[0].in_msg.hash&& father?.transactions&&father.transactions.length>0)
+        if(father && father?.transactions && father.transactions.length>0)
         {
             return {
                 tx : father.transactions[0],
@@ -207,6 +208,7 @@ async function achive(hash)
             const rawTx =  await getTonMotherTransactionByHash(hash.toLowerCase());
             const tx =rawTx.tx;
             const book = rawTx.book;
+            console.log(rawTx)
             if(tx && tx?.out_msgs && tx.out_msgs.length == 2)
             {
                 const sender = book[tx.out_msgs[0].source]?.user_friendly.toLowerCase();
