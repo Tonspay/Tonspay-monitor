@@ -11,7 +11,7 @@ const utils = require("../utils/index")
 
 require('dotenv').config()
 
-const tonapiWs = 'wss://tonapi.io/v2/websocket'
+const tonapiWs = `wss://tonapi.io/v2/websocket?token=${process.env.TONVIWER_API}`
 
 var lastInvoiceHash = "";
 
@@ -115,22 +115,32 @@ async function getTonTransactionByHash(hash)
     return false;
 }
 
-async function getTonMotherTransactionByChild(hash)
+async function getTonMotherTransactionByChild(hash,i)
 {
     try{
+        await sleep(15000)
         const child =  await utils.api.getToncenterTransactionByHash(hash)
-        await sleep(1000)
-        // console.log(child);
+        await sleep(5000)
+        console.log(child);
+        console.log(JSON.stringify(child))
         if(child && child?.transactions && child.transactions.length>0 && child.transactions[0]?.in_msg && child.transactions[0].in_msg.hash)
         {
             const inMsgHash = child.transactions[0].in_msg.hash
             const father = await utils.api.getToncenterTransactionByMessage('out',inMsgHash)
+            console.log(father)
+            console.log(JSON.stringify(father))
             if(father && father?.transactions&&father.transactions.length>0)
             {
                 return {
                     tx : father.transactions[0],
                     book : father.address_book
                 }
+            }else{
+                if(i<10)
+                {
+                    return await getTonMotherTransactionByChild(hash,i++)
+                }
+                
             }
         }
     }catch(e)
@@ -205,7 +215,7 @@ async function achive(hash)
         {
             console.log("🐞 achive hash  :",hash)
             //TODO check if the txn valid . 
-            const rawTx =  await getTonMotherTransactionByHash(hash.toLowerCase());
+            const rawTx =  await getTonMotherTransactionByChild(hash.toLowerCase());
             const tx =rawTx.tx;
             const book = rawTx.book;
             console.log(rawTx)
@@ -261,13 +271,17 @@ async function listen()
                 if (message.type === 'utf8') {
                     const msg = JSON.parse(message.utf8Data);
                     console.log(msg)
-                    if(msg.method == 'subscribe_trace')
+                    if(msg.method == 'subscribe_account')
                     {
                         console.log('Tonview websocket subscrib connected')
                     }
                     if(msg.method == 'trace')
                     {
                         await achive(msg.params.hash)
+                    }
+                    if(msg.method == 'account_transaction')
+                    {
+                        await achive(msg.params.tx_hash)
                     }
                 }
             }catch(e)
@@ -282,7 +296,7 @@ async function listen()
                 {
                     "id":1,
                     "jsonrpc":"2.0",
-                    "method":"subscribe_trace",
+                    "method":"subscribe_account",
                     "params":[
                         process.env.LISTEN_TON_ID
                     ]
