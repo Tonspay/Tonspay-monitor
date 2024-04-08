@@ -140,11 +140,19 @@ async function getTonMotherTransactionByChild(hash,i)
                 {
                     return await getTonMotherTransactionByChild(hash,i++)
                 }
-                
+            }
+        }else{
+            if(i<10)
+            {
+                return await getTonMotherTransactionByChild(hash,i++)
             }
         }
     }catch(e)
     {console.error(e)}
+    if(i<10)
+    {
+        return await getTonMotherTransactionByChild(hash,i++)
+    }
     return false;
 }
 
@@ -215,7 +223,7 @@ async function achive(hash)
         {
             console.log("🐞 achive hash  :",hash)
             //TODO check if the txn valid . 
-            const rawTx =  await getTonMotherTransactionByChild(hash.toLowerCase());
+            const rawTx =  await getTonMotherTransactionByChild(hash.toLowerCase(),0);
             const tx =rawTx.tx;
             const book = rawTx.book;
             console.log(rawTx)
