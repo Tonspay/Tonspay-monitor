@@ -11,7 +11,7 @@ const sCallback = "callback"
 const merchantPaymentMethodStruct = {
     uid: 0, //merchantId
     methodId: 0, //PaymentMethodId uid+timestamp+type to string(36)
-    type: 0, // Type of payment : 0:TON | 1:SOL | 2:ARB | 3:Binance
+    type: 0, // Type of payment : 0:TON | 1:SOL | 2:ARB | 3:Binance | 4:BSC
     address: "", // Address to recive payment 
     callback : "",
     label: "" //Name for merchant remember
