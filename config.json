@@ -12,11 +12,11 @@
         }
     },
     "bsc":{
-        "chainId":"97",
-        "httpProvider":["https://bsc-testnet-rpc.publicnode.com"],
-        "wsProvider":["wss://bsc-rpc.publicnode.com"],
+        "chainId":"56",
+        "httpProvider":["https://bsc-rpc.publicnode.com"],
+        "wsProvider":["wss://bsc-mainnet.core.chainstack.com/ws/fa967f2cd73df28abef971300013b649"],
         "invoice":{
-            "invoice_type":4,
+            "invoice_type":5,
             "routerAddress":"0xab03f37611728B23A6e9Bf89E2C5a5dfAA5b7C4c",
             "topics":{
                 "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
