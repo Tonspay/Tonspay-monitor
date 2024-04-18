@@ -1,6 +1,7 @@
 const web3 = require("@solana/web3.js")
 
 const sol = require("./monitor/sol")
+const api =require("./utils/apis")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
 const utils = require("./utils/index");
 
@@ -117,6 +118,19 @@ async function awaitSignatureStatus(sign,i)
     return await awaitSignatureStatus(sign,i++)
 }
 
+async function tonApiTest()
+{
+    var testhash = ''
+    const data = await api.getTonTransactionByHash(testhash);
+    console.log(data);
+    // console.log(data.transactions[0].in_msg)
+    // console.log(data.transactions[0].in_msg.hash)
+    var dst = data.in_msg.source.address//(data.transactions[0].in_msg.source.split(":"))[1]
+    const msgTx = await api.getTonTransactionByAccount(dst,1)
+    // const msgTx = await api.getToncenterTransactionByMessage('out',data.transactions[0].in_msg.hash)
+    // const msgTx = await api.getTonTransactionByMessage(data.transactions[0].in_msg.hash)
+    console.log(msgTx.transactions[0])
+}
 async function test()
 {
     // await getTransactions('')
@@ -127,6 +141,8 @@ async function test()
 
     // await awaitSignatureStatus('')
     // console.log("Test over")
+
+    await tonApiTest()
 }
 
 test()

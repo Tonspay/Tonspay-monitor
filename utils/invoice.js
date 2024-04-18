@@ -5,6 +5,8 @@ const b58 = require("b58")
 
 const dotenv = require("dotenv")
 
+const tonweb = require("tonweb")
+
 const callback_sleep = 3000
 
 var sign_kp = nacl.sign.keyPair.fromSecretKey(
@@ -17,6 +19,15 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
 {
     //Verfiy if the invoice exsit , and check the invoice payment data .
     const invoice = await db.getInvoiceById(invoiceId);
+
+    //Prehandel of some chain invoice 
+    if(invoice.type == 0)
+    {
+        from = (new tonweb.utils.Address(from)).toString(false)
+        to = (new tonweb.utils.Address(to)).toString(false)
+        invoice.address = (new tonweb.utils.Address(invoice.address)).toString(false)
+    }
+
     if(invoice
         && invoice.amount >= amountSend
         && invoice.type == transactionType 

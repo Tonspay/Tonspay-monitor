@@ -1,9 +1,8 @@
 const ton = require("./monitor/ton")
 
-async function init()
-{
+async function init() {
     await ton.listen();
-    
+
 }
 
 init()

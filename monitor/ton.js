@@ -156,6 +156,44 @@ async function getTonMotherTransactionByChild(hash,i)
     return false;
 }
 
+async function getTonSenderLastTxn(hash,i)
+{
+    try{
+        const child =  await utils.api.getTonTransactionByHash(hash)
+        console.log(child);
+
+        if(child && child.in_msg)
+        {
+            var dst = child.in_msg.source.address
+            const father = await utils.api.getTonTransactionByAccount(dst,1)
+            if(father && father?.transactions&&father.transactions.length>0)
+            {
+                return {
+                    tx : father.transactions[0],
+                }
+            }else{
+                if(i<10)
+                {
+                    await sleep(5000)
+                    return await getTonSenderLastTxn(hash,i++)
+                }
+            }
+        }else{
+            if(i<10)
+            {
+                await sleep(5000)
+                return await getTonSenderLastTxn(hash,i++)
+            }
+        }
+    }catch(e)
+    {console.error(e)}
+    if(i<10)
+    {
+        return await getTonMotherTransactionByChild(hash,i++)
+    }
+    return false;
+}
+
 async function getTonMotherTransactionByHash(hash)
 {
     try{
@@ -223,18 +261,17 @@ async function achive(hash)
         {
             console.log("🐞 achive hash  :",hash)
             //TODO check if the txn valid . 
-            const rawTx =  await getTonMotherTransactionByChild(hash.toLowerCase(),0);
+            const rawTx =  await getTonSenderLastTxn(hash.toLowerCase(),0);
             const tx =rawTx.tx;
-            const book = rawTx.book;
             console.log(rawTx)
             if(tx && tx?.out_msgs && tx.out_msgs.length == 2)
             {
-                const sender = book[tx.out_msgs[0].source]?.user_friendly.toLowerCase();
+                const sender =tx.out_msgs[0].source.address;
                 const senderFee = tx.out_msgs[0].value
-                const reciver = book[tx.out_msgs[0].destination]?.user_friendly.toLowerCase();
-                const router = book[tx.out_msgs[1].destination]?.user_friendly.toLowerCase();
+                const reciver =tx.out_msgs[0].destination.address; 
+                const router =tx.out_msgs[1].destination.address;
                 const routerFee = tx.out_msgs[1].value
-                const id = tx.out_msgs[1].message_content.decoded.comment
+                const id = tx.out_msgs[1].decoded_body.text
                 await utils.invoice.invoice_achive(
                     id,
                     hash.toLowerCase(),
