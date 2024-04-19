@@ -160,7 +160,7 @@ async function getTonSenderLastTxn(hash,i)
         const child =  await utils.api.getTonTransactionByHash(hash)
         console.log(child);
 
-        if(child && child.in_msg)
+        if(child && child.in_msg && child.in_msg.source)
         {
             var dst = child.in_msg.source.address
             const father = await utils.api.getTonTransactionByAccount(dst,1)
@@ -176,7 +176,13 @@ async function getTonSenderLastTxn(hash,i)
                     return await getTonSenderLastTxn(hash,i++)
                 }
             }
-        }else{
+        }else if(child && child.out_msgs && child.out_msgs.length==2)
+        {
+            return {
+                tx : child,
+            }
+        }
+        else{
             if(i<10)
             {
                 await sleep(5000)
@@ -187,7 +193,7 @@ async function getTonSenderLastTxn(hash,i)
     {console.error(e)}
     if(i<10)
     {
-        return await getTonMotherTransactionByChild(hash,i++)
+        return await getTonTransactionByHash(hash,i++)
     }
     return false;
 }
@@ -261,7 +267,7 @@ async function achive(hash)
             //TODO check if the txn valid . 
             const rawTx =  await getTonSenderLastTxn(hash.toLowerCase(),0);
             const tx =rawTx.tx;
-            console.log(rawTx)
+            // console.log(rawTx)
             if(tx && tx?.out_msgs && tx.out_msgs.length == 2)
             {
                 const sender =tx.out_msgs[0].source.address;
@@ -270,7 +276,7 @@ async function achive(hash)
                 const router =tx.out_msgs[1].destination.address;
                 const routerFee = tx.out_msgs[1].value
                 const id = tx.out_msgs[1].decoded_body.text
-                await utils.invoice.invoice_achive(
+                return await utils.invoice.invoice_achive(
                     id,
                     hash.toLowerCase(),
                     sender,
@@ -358,5 +364,6 @@ async function listen()
 // ws()
 
 module.exports = {
-    listen
+    listen,
+    achive
 }

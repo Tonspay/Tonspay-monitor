@@ -19,7 +19,7 @@ const toncenterRouter = {
 
 const tonspayMonitor = process.env.HTTP_AUTH_PATH;
 const tonspayMonitorRouter = {
-    emit : "/emit"
+    emit : tonspayMonitor+"/emit"
 }
 
 async function anyRequest(url) {
@@ -114,7 +114,7 @@ async function newInvoiceEmit(body,type) {
         'method': 'POST',
         'url': tonspayMonitorRouter.emit+`/${type}`,
         'headers': {
-            'token': process.env.HTTP_AUTH_PATH,
+            'token': process.env.HTTP_AUTH,
             'Content-Type': 'application/json'
         },
         'body':JSON.stringify(body)

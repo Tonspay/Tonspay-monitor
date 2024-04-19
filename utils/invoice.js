@@ -33,7 +33,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
 
     //Send out request
 
-    return await newInvoiceEmit(invoice)
+    return await api.newInvoiceEmit(invoice,'invoice')
 }
 
 function callback_sign(data)
@@ -53,5 +53,5 @@ function sleep (ms) {
 }
 
 module.exports = {
-invoice_achive
+    invoice_achive
 }
