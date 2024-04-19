@@ -20,6 +20,13 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
     //Verfiy if the invoice exsit , and check the invoice payment data .
     const invoice = await db.getInvoiceById(invoiceId);
 
+    //Check invoice status . 
+    if(invoice.status != 0 )
+    {
+        console.log(`🐞 Invoice ${invoice.id} already paid . recall hash : ${hash}`)
+        return false ;
+    }
+
     //Prehandel of some chain invoice 
     if(invoice.type == 0)
     {
@@ -35,6 +42,7 @@ async function invoice_achive(invoiceId,hash,from,to,amountSend,amountFee,transa
         && invoice.address.toLowerCase() == to.toLowerCase()
         && invoice.callback)
     {
+        
         const paymentResult = {
             "paymentDetails": {
                 "from":from,
