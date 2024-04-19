@@ -43,7 +43,7 @@ try{
 
     const signData = b58.decode(rawData);
 
-    const decodeData = nacl.sign.open( signData, signKp.publicKey)
+    const decodeData = nacl.sign.open( signData, signKp)
 
     const finalData = JSON.parse(
         Buffer.from(decodeData).toString()
@@ -92,6 +92,17 @@ async function invoice_emit(body,type)
     const rawData = decode(body.sign);
     console.log(rawData)
     //Emit invoice success and invoice callback 
+    await utils.invoice.invoice_achive(
+        body.invoiceId,
+        rawData.hash,
+        rawData.from,
+        rawData.to,
+        rawData.amountSend,
+        rawData.amountFee,
+        rawData.transactionType,
+        rawData.token,
+        rawData.block
+    )
     }
   }
 
