@@ -5,6 +5,8 @@ const api =require("./utils/apis")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
 const utils = require("./utils/index");
 
+const b58 = require("b58")
+const nacl = require("tweetnacl")
 async function listenAccount()
 {
     const ACCOUNT_TO_WATCH = new web3.PublicKey(''); // Replace with your own Wallet Address
@@ -131,6 +133,18 @@ async function tonApiTest()
     // const msgTx = await api.getTonTransactionByMessage(data.transactions[0].in_msg.hash)
     console.log(msgTx.transactions[0])
 }
+
+async function generateNewkp()
+{
+    const kp= nacl.sign.keyPair();
+
+    console.log(
+        b58.encode(kp.secretKey)
+    )
+    console.log(
+        b58.encode(kp.publicKey)
+    )
+}
 async function test()
 {
     // await getTransactions('')
@@ -142,7 +156,8 @@ async function test()
     // await awaitSignatureStatus('')
     // console.log("Test over")
 
-    await tonApiTest()
+    // await tonApiTest()
+    await generateNewkp()
 }
 
 test()

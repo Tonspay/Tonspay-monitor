@@ -189,7 +189,7 @@ async function getTonSenderLastTxn(hash,i)
     {console.error(e)}
     if(i<10)
     {
-        return await getTonMotherTransactionByChild(hash,i++)
+        return await getTonTransactionByHash(hash,i++)
     }
     return false;
 }
