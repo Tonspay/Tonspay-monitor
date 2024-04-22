@@ -11,7 +11,7 @@ const utils = require("../utils/index")
 
 require('dotenv').config()
 
-const tonapiWs = `wss://tonapi.io/v2/websocket?token=${process.env.TONVIWER_API}`
+const tonapiWs = `wss://tonapi.io/v2/websocket`
 
 var lastInvoiceHash = "";
 
