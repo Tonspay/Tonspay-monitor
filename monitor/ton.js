@@ -158,14 +158,21 @@ async function getTonSenderLastTxn(hash,i)
 {
     try{
         const child =  await utils.api.getTonTransactionByHash(hash)
-        console.log(child);
+        // console.log(child);
 
         if(child && child.in_msg && child.in_msg.source)
         {
             var dst = child.in_msg.source.address
-            const father = await utils.api.getTonTransactionByAccount(dst,1)
+            const father = await utils.api.getTonTransactionByAccount(dst,2)
             if(father && father?.transactions&&father.transactions.length>0)
             {
+                for(var i = 0 ; i< father.length ; i ++)
+                {
+                    if(father.transactions[i].out_msgs.length >1)
+                    {
+                        return father.transactions[i]
+                    }
+                }
                 return {
                     tx : father.transactions[0],
                 }
@@ -267,15 +274,26 @@ async function achive(hash)
             //TODO check if the txn valid . 
             const rawTx =  await getTonSenderLastTxn(hash.toLowerCase(),0);
             const tx =rawTx.tx;
+            console.log(tx)
             // console.log(rawTx)
             if(tx && tx?.out_msgs && tx.out_msgs.length == 2)
             {
-                const sender =tx.out_msgs[0].source.address;
-                const senderFee = tx.out_msgs[0].value
-                const reciver =tx.out_msgs[0].destination.address; 
-                const router =tx.out_msgs[1].destination.address;
-                const routerFee = tx.out_msgs[1].value
-                const id = tx.out_msgs[1].decoded_body.text
+                var noticeTx ;
+                var payTx ; 
+                tx.out_msgs.forEach(ele => {
+                    if(ele.decoded_op_name == "text_comment")
+                    {
+                        noticeTx = ele
+                    }else{
+                        payTx = ele
+                    }
+                });
+                const sender =payTx.source.address;
+                const senderFee = payTx.value
+                const reciver =payTx.destination.address; 
+                const router =noticeTx.destination.address;
+                const routerFee = noticeTx.value
+                const id = noticeTx.decoded_body.text
                 return await utils.invoice.invoice_achive(
                     id,
                     hash.toLowerCase(),
