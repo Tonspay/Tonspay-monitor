@@ -1,6 +1,7 @@
 const web3 = require("@solana/web3.js")
 
 const sol = require("./monitor/sol")
+const ton = require("./monitor/ton")
 const api =require("./utils/apis")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
 const utils = require("./utils/index");
@@ -145,6 +146,14 @@ async function generateNewkp()
         b58.encode(kp.publicKey)
     )
 }
+
+async function tonTest()
+{
+    // const tx = await api.getTonTransactionByHash('')
+    const txs = await ton.getTonSenderLastTxn("",5)
+    console.log(txs)
+}
+
 async function test()
 {
     // await getTransactions('')
@@ -157,7 +166,9 @@ async function test()
     // console.log("Test over")
 
     // await tonApiTest()
-    await generateNewkp()
+    // await generateNewkp()
+
+    await tonTest()
 }
 
 test()

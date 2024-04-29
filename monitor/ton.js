@@ -164,18 +164,18 @@ async function getTonSenderLastTxn(hash,i)
         {
             var dst = child.in_msg.source.address
             const father = await utils.api.getTonTransactionByAccount(dst,2)
+            // console.log(father.transactions[1].out_msgs)
             if(father && father?.transactions&&father.transactions.length>0)
             {
-                for(var i = 0 ; i< father.length ; i ++)
+                
+                for(var i = 0 ; i< father.transactions.length ; i ++)
                 {
                     if(father.transactions[i].out_msgs.length >1)
                     {
                         return father.transactions[i]
                     }
                 }
-                return {
-                    tx : father.transactions[0],
-                }
+                return father.transactions[0]
             }else{
                 if(i<10)
                 {
@@ -198,9 +198,10 @@ async function getTonSenderLastTxn(hash,i)
         }
     }catch(e)
     {console.error(e)}
+
     if(i<10)
     {
-        return await getTonTransactionByHash(hash,i++)
+        return await getTonSenderLastTxn(hash,i++)
     }
     return false;
 }
@@ -288,12 +289,22 @@ async function achive(hash)
                         payTx = ele
                     }
                 });
-                const sender =payTx.source.address;
-                const senderFee = payTx.value
-                const reciver =payTx.destination.address; 
-                const router =noticeTx.destination.address;
-                const routerFee = noticeTx.value
-                const id = noticeTx.decoded_body.text
+
+
+
+                var sender =payTx.source.address;
+                var senderFee = payTx.value
+                var reciver =payTx.destination.address; 
+                var router =noticeTx.destination.address;
+                var routerFee = noticeTx.value
+                var id = noticeTx.decoded_body.text
+
+                if(payTx?.decoded_op_name && payTx.decoded_op_name == 'jetton_transfer' && payTx?.decoded_body)
+                {
+                    reciver = payTx.decoded_body.destination;
+                    senderFee = payTx.decoded_body.amount
+                }
+                
                 return await utils.invoice.invoice_achive(
                     id,
                     hash.toLowerCase(),
@@ -303,7 +314,7 @@ async function achive(hash)
                     routerFee,
                     0,
                     0,
-                    0,
+                    tx.utime,
                     )
             }
         }
@@ -383,5 +394,6 @@ async function listen()
 
 module.exports = {
     listen,
-    achive
+    achive,
+    getTonSenderLastTxn
 }
