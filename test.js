@@ -1,6 +1,7 @@
 const web3 = require("@solana/web3.js")
 
 const sol = require("./monitor/sol")
+const ton = require("./monitor/ton")
 const api =require("./utils/apis")
 const solanaConnection = new web3.Connection(process.env.SOL_HTTP,{wsEndpoint:process.env.SOL_WS});
 const utils = require("./utils/index");
@@ -185,6 +186,16 @@ async function achiveHashTest()
         )
     console.log(ret)
 }
+async function tonTest()
+{
+    // const tx = await api.getTonTransactionByHash('')
+    // const txs = await ton.getTonSenderLastTxn("",5)
+    // console.log(txs.tx.out_msgs[0])
+    // const jetton = await api.getTonWalletData(txs.tx.out_msgs[0].destination.address)
+    // console.log(jetton)
+    await ton.achive('')
+}
+
 async function test()
 {
     // await getTransactions('')
@@ -201,7 +212,8 @@ async function test()
 
     // await getInvoice()
 
-    await achiveHashTest()
+    // await achiveHashTest()
+    await tonTest()
 }
 
 test()
