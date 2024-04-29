@@ -52,6 +52,36 @@ function sleep (ms) {
     });
 }
 
+const tonTokenIndex = {
+    '0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe':1,
+    1:"0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe"
+}
+
+function getTokenAddress(type,token)
+{
+    switch (type){
+        case 0 :
+            if(token == 1)
+            {
+                return '0:b113a994b5024a16719f69139328eb759596c38a25f59028b146fecdc3621dfe'
+            }
+            break;
+        default : 
+            break;
+    }
+    return false;
+}
+
+function getTonAddressToken(address)
+{
+    if(tonTokenIndex[address]){
+        return tonTokenIndex[address]
+    }
+    return false;
+}
+
 module.exports = {
-    invoice_achive
+    invoice_achive,
+    getTokenAddress,
+    getTonAddressToken
 }

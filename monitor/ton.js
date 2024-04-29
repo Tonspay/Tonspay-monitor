@@ -272,6 +272,7 @@ async function achive(hash)
         {
             console.log("🐞 achive hash  :",hash)
             //TODO check if the txn valid . 
+            var token = 0;
             const rawTx =  await getTonSenderLastTxn(hash.toLowerCase(),0);
             const tx =rawTx.tx;
             console.log(tx)
@@ -288,22 +289,42 @@ async function achive(hash)
                         payTx = ele
                     }
                 });
-                const sender =payTx.source.address;
-                const senderFee = payTx.value
-                const reciver =payTx.destination.address; 
-                const router =noticeTx.destination.address;
-                const routerFee = noticeTx.value
-                const id = noticeTx.decoded_body.text
+
+
+
+                var sender =payTx.source.address;
+                var senderFee = payTx.value
+                var reciver =payTx.destination.address; 
+                var router =noticeTx.destination.address;
+                var routerFee = noticeTx.value
+                var id = noticeTx.decoded_body.text
+
+                if(payTx?.decoded_op_name && payTx.decoded_op_name == 'jetton_transfer' && payTx?.decoded_body)
+                {
+                    reciver = payTx.decoded_body.destination;
+                    senderFee = payTx.decoded_body.amount
+                    //Check if the jetton correct
+                    const jetton = await utils.api.getTonWalletData(payTx.destination.address)
+                    if(jetton?.decoded)
+                    {
+                        var _t = utils.invoice.getTonAddressToken(jetton.decoded.jetton);
+                        if(_t)
+                        {
+                            token = _t
+                        }
+                    }
+                }
+                
                 return await utils.invoice.invoice_achive(
                     id,
                     hash.toLowerCase(),
                     sender,
                     reciver,
-                    senderFee,
+                    Number(senderFee),
                     routerFee,
                     0,
-                    0,
-                    0,
+                    token,
+                    tx.utime,
                     )
             }
         }
@@ -311,6 +332,7 @@ async function achive(hash)
     {console.error(e)}
 
 }
+
 
 
 async function listen()

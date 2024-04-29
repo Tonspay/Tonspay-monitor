@@ -121,6 +121,19 @@ async function newInvoiceEmit(body,type) {
     };
     return req.doRequest(options);
 }
+
+async function getTonWalletData(account)
+{
+    var options = {
+        'method': 'GET',
+        'url': tonRouter.account + account+'/methods/get_wallet_data',
+        'headers': {
+            'Authorization': "Bearer " + process.env.TONVIWER_API,
+            'Content-Type': 'application/json'
+        },
+    };
+    return req.doRequest(options);
+}
 module.exports = {
     anyRequest,
     callbackRequest,
@@ -130,5 +143,6 @@ module.exports = {
     getToncenterTransactionByHash,
     getToncenterTransactionByMessage,
 
-    newInvoiceEmit
+    newInvoiceEmit,
+    getTonWalletData
 }
