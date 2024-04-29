@@ -145,6 +145,46 @@ async function generateNewkp()
         b58.encode(kp.publicKey)
     )
 }
+
+async function getInvoice()
+{
+    // console.log(
+    //     await utils.db.getInvoiceById()
+    // )
+    console.log(
+        (await utils.api.getTonTransactionByHash('')).out_msgs
+    )
+}
+
+async function achiveHashTest()
+{
+    const id = '';
+
+    const i =  await utils.db.getInvoiceById(id)
+
+    const hash = ''
+
+    const sender = '0:';
+
+    const reciver = '0:';
+
+    const senderFee = 0;
+    
+    const routerFee = '0';
+
+    var ret = await utils.invoice.invoice_achive(
+        id,
+        hash.toLowerCase(),
+        sender,
+        reciver,
+        senderFee,
+        routerFee,
+        0,
+        0,
+        0,
+        )
+    console.log(ret)
+}
 async function test()
 {
     // await getTransactions('')
@@ -157,7 +197,11 @@ async function test()
     // console.log("Test over")
 
     // await tonApiTest()
-    await generateNewkp()
+    // await generateNewkp()
+
+    // await getInvoice()
+
+    await achiveHashTest()
 }
 
 test()
