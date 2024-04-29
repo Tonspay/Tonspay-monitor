@@ -34,5 +34,29 @@
                 "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
             }
         }
+    },
+    "planq":{
+        "chainId":"7070",
+        "httpProvider":["https://planq-rpc.nodies.app"],
+        "wsProvider":["wss://evm-rpc-ws.planq.network"],
+        "invoice":{
+            "invoice_type":6,
+            "routerAddress":"0x318b6ab1cbC3258a083c77a6FBC9a1215FfdDeA4",
+            "topics":{
+                "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
+            }
+        }
+    },
+    "zkscroll":{
+        "chainId":"534352",
+        "httpProvider":["https://rpc.ankr.com/scroll"],
+        "wsProvider":["wss://arb-mainnet.g.alchemy.com/v2/az99XU3yyqQmGX-0IXgop92EMIb-dX2N"],
+        "invoice":{
+            "invoice_type":7,
+            "routerAddress":"0x318b6ab1cbC3258a083c77a6FBC9a1215FfdDeA4",
+            "topics":{
+                "pay":"0x144288996e16900164b8e80321c7076aa5901873a8cfe494c8890d3f1c099e32"
+            }
+        }
     }
 }
