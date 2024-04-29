@@ -77,7 +77,18 @@ async function getTonTransactionByAccount(account,limit) {
     return req.doRequest(options);
 }
 
-
+async function getTonWalletData(account)
+{
+    var options = {
+        'method': 'GET',
+        'url': tonRouter.account + account+'/methods/get_wallet_data',
+        'headers': {
+            'Authorization': "Bearer " + process.env.TONVIWER_API,
+            'Content-Type': 'application/json'
+        },
+    };
+    return req.doRequest(options);
+}
 
 async function getToncenterTransactionByHash(hash) {
     var options = {
@@ -103,6 +114,8 @@ async function getToncenterTransactionByMessage(dir, hash) {
     };
     return req.doRequest(options);
 }
+
+
 module.exports = {
     anyRequest,
     callbackRequest,
@@ -110,5 +123,6 @@ module.exports = {
     getTonTransactionByMessage,
     getTonTransactionByAccount,
     getToncenterTransactionByHash,
-    getToncenterTransactionByMessage
+    getToncenterTransactionByMessage,
+    getTonWalletData
 }

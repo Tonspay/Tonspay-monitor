@@ -172,10 +172,14 @@ async function getTonSenderLastTxn(hash,i)
                 {
                     if(father.transactions[i].out_msgs.length >1)
                     {
-                        return father.transactions[i]
+                        return {
+                            tx :  father.transactions[i]
+                        }
                     }
                 }
-                return father.transactions[0]
+                return {
+                    tx : father.transactions[0]
+                }
             }else{
                 if(i<10)
                 {
@@ -273,6 +277,7 @@ async function achive(hash)
         {
             console.log("🐞 achive hash  :",hash)
             //TODO check if the txn valid . 
+            var token = 0;
             const rawTx =  await getTonSenderLastTxn(hash.toLowerCase(),0);
             const tx =rawTx.tx;
             console.log(tx)
@@ -303,6 +308,16 @@ async function achive(hash)
                 {
                     reciver = payTx.decoded_body.destination;
                     senderFee = payTx.decoded_body.amount
+                    //Check if the jetton correct
+                    const jetton = await utils.api.getTonWalletData(payTx.destination.address)
+                    if(jetton?.decoded)
+                    {
+                        var _t = utils.invoice.getTonAddressToken(jetton.decoded.jetton);
+                        if(_t)
+                        {
+                            token = _t
+                        }
+                    }
                 }
                 
                 return await utils.invoice.invoice_achive(
@@ -310,10 +325,10 @@ async function achive(hash)
                     hash.toLowerCase(),
                     sender,
                     reciver,
-                    senderFee,
+                    Number(senderFee),
                     routerFee,
                     0,
-                    0,
+                    token,
                     tx.utime,
                     )
             }

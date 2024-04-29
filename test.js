@@ -150,8 +150,11 @@ async function generateNewkp()
 async function tonTest()
 {
     // const tx = await api.getTonTransactionByHash('')
-    const txs = await ton.getTonSenderLastTxn("",5)
-    console.log(txs)
+    // const txs = await ton.getTonSenderLastTxn("",5)
+    // console.log(txs.tx.out_msgs[0])
+    // const jetton = await api.getTonWalletData(txs.tx.out_msgs[0].destination.address)
+    // console.log(jetton)
+    await ton.achive('')
 }
 
 async function test()
