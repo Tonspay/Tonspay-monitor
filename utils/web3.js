@@ -44,7 +44,7 @@ async function listen()
     // setTimeout(() => {try{handle(log)}catch(e){console.error(e)}}, 60000)
   }).on("changed", function(log){
       console.log('changed',log);
-  });
+  })
 }
 
 async function handle(log)
