@@ -11,7 +11,7 @@ require('dotenv').config()
 
 const tonapiWs = `wss://tonapi.io/v2/websocket?token=${process.env.TONVIWER_API}`
 
-var lastInvoiceHash = "";
+var lastInvoiceHash = [];
 
 function sleep (ms) {
     return new Promise((resolve) => {
@@ -19,6 +19,54 @@ function sleep (ms) {
     });
 }
 // test()
+
+async function dtonLoopCheck()
+{
+    while(true)
+        {
+            try{
+                await dtonLoopCore();
+            }catch(e){
+                console.error(e)
+            }
+            await sleep(10000)
+        }
+}
+
+async function dtonLoopCore()
+{
+    var ret_txs = []
+    var txs = await getTonTransactions(process.env.LISTEN_TON,10);
+    txs = txs.transactions;
+    // console.log(txs)
+    txs.forEach(e => {
+        ret_txs.push(e.hash);
+    });
+
+    var unDealHash = JSON.parse(JSON.stringify(ret_txs))
+    for(var i  = 0 ; i < lastInvoiceHash.length ; i ++)
+        {
+            for(var u=0;u<ret_txs.length;u++)
+                {
+                    if(lastInvoiceHash[i]==ret_txs[u])
+                        {
+                            var index = unDealHash.indexOf(ret_txs[u]);
+                            if (index !== -1) {
+                                unDealHash.splice(index, 1);
+                            }
+                        }
+                }
+        }
+    
+    //Let's deal with the undeal txs
+    for(var i = 0 ; i < unDealHash.length ; i ++)
+        {
+            await achive(unDealHash[i].toLowerCase())
+        }
+
+    lastInvoiceHash = JSON.parse(JSON.stringify(ret_txs))
+    return lastInvoiceHash
+}
 
 async function getTonTransactions(address,page)
 {
@@ -296,7 +344,7 @@ async function achive(hash)
                 });
 
 
-
+                console.log(noticeTx)
                 var sender =payTx.source.address;
                 var senderFee = payTx.value
                 var reciver =payTx.destination.address; 
@@ -341,67 +389,69 @@ async function achive(hash)
 
 async function listen()
 {
-    var WebSocketClient = require('websocket').client;
+    // var WebSocketClient = require('websocket').client;
 
-    var client = new WebSocketClient();
+    // var client = new WebSocketClient();
 
-    client.on('connectFailed', function(error) {
-        console.log('Connect Error: ' + error.toString());
-    });
+    // client.on('connectFailed', function(error) {
+    //     console.log('Connect Error: ' + error.toString());
+    // });
 
-    client.on('connect', function(connection) {
-        console.log('Tonview websocket connected ');
-        connection.on('error', function(error) {
-            console.log("Connection Error: " + error.toString());
-            process.exit(0)
-        });
-        connection.on('close', function() {
-            console.log('Connection Closed');
-            process.exit(0)
-        });
-        connection.on('message',async function(message) {
-            try{
-                if (message.type === 'utf8') {
-                    const msg = JSON.parse(message.utf8Data);
-                    console.log(msg)
-                    if(msg.method == 'subscribe_account')
-                    {
-                        console.log('Tonview websocket subscrib connected')
-                    }
-                    if(msg.method == 'trace')
-                    {
-                        await achive(msg.params.hash)
-                    }
-                    if(msg.method == 'account_transaction')
-                    {
-                        await achive(msg.params.tx_hash)
-                    }
-                }
-            }catch(e)
-            {
-                console.error(e)
-            }
+    // client.on('connect', function(connection) {
+    //     console.log('Tonview websocket connected ');
+    //     connection.on('error', function(error) {
+    //         console.log("Connection Error: " + error.toString());
+    //         process.exit(0)
+    //     });
+    //     connection.on('close', function() {
+    //         console.log('Connection Closed');
+    //         process.exit(0)
+    //     });
+    //     connection.on('message',async function(message) {
+    //         try{
+    //             if (message.type === 'utf8') {
+    //                 const msg = JSON.parse(message.utf8Data);
+    //                 console.log(msg)
+    //                 if(msg.method == 'subscribe_account')
+    //                 {
+    //                     console.log('Tonview websocket subscrib connected')
+    //                 }
+    //                 if(msg.method == 'trace')
+    //                 {
+    //                     await achive(msg.params.hash)
+    //                 }
+    //                 if(msg.method == 'account_transaction')
+    //                 {
+    //                     await achive(msg.params.tx_hash)
+    //                 }
+    //             }
+    //         }catch(e)
+    //         {
+    //             console.error(e)
+    //         }
 
-        });
+    //     });
 
-        connection.sendUTF(
-            JSON.stringify(
-                {
-                    "id":1,
-                    "jsonrpc":"2.0",
-                    "method":"subscribe_account",
-                    "params":[
-                        process.env.LISTEN_TON_ID
-                    ]
-                }
-            )
-        )
+    //     connection.sendUTF(
+    //         JSON.stringify(
+    //             {
+    //                 "id":1,
+    //                 "jsonrpc":"2.0",
+    //                 "method":"subscribe_account",
+    //                 "params":[
+    //                     process.env.LISTEN_TON_ID
+    //                 ]
+    //             }
+    //         )
+    //     )
         
         
-    });
+    // });
 
-    client.connect(tonapiWs);
-    }
+    // client.connect(tonapiWs);
+    await dtonLoopCheck()
+
+}
 
 
 
@@ -410,5 +460,7 @@ async function listen()
 module.exports = {
     listen,
     achive,
-    getTonSenderLastTxn
+    getTonSenderLastTxn,
+    getTonTransactions,
+    
 }

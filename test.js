@@ -193,7 +193,9 @@ async function tonTest()
     // console.log(txs.tx.out_msgs[0])
     // const jetton = await api.getTonWalletData(txs.tx.out_msgs[0].destination.address)
     // console.log(jetton)
-    await ton.achive('')
+    // await ton.achive('')
+    var tx = await ton.getTonTransactions('',5);
+    console.log(tx)
 }
 
 async function test()
